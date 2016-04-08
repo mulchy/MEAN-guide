@@ -38,7 +38,7 @@ npm init
 This will initialize the Node Package Manager and prompt you to enter some information about the app you are going to create. Hit the return key for any values listed as (default) below.
 
 field | value | explanation
--|-|-
+---|---|---
 name<br>version  | (default) | Leave the NAME and VERSION alone. We will talk more about app naming and semantic versioning as we continue at Prime, for now the defaults are fine.
 description | My first MEAN application |
 entry point | (default) | Leave index.js as the entry point. You read that correctly, index.js (not .html).
