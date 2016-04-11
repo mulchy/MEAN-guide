@@ -388,7 +388,7 @@ This all allows us to use BodyParser and tightens up a few last things for use o
 router.post('/add', function(request, response, next){
   var kitty = new Cat({name: request.body.name});
   kitty.save(function(err){
-    if(err) {
+    if (err) {
       console.log('meow %s', err);
     }
     response.send(kitty.toJSON());
@@ -398,7 +398,7 @@ router.post('/add', function(request, response, next){
 
 router.get('/cats', function(request, response, next){
   Cat.find({}).exec(function(err, cats){
-    if(err) {
+    if (err) {
       throw new Error(err);
     }
     response.send(JSON.stringify(cats));
