@@ -294,18 +294,31 @@ Now check out those folders! Yahtzee! Files we can use client side! You will see
 
 ### Include Angular
 Now that we have fancy build processes and Angular, let's go ahead and start hooking up Angular. In our server.js file, add the following line to serve the static content.
+
 ```
 app.use(express.static('server/public')));
+```
+
+We need to add some logic to serve our index file when a user requests the root URL. Back in the `index.js` file, lets add the following:
+
+```
+var path = require('path');
+
+...
+
+router.get('/', function(req,res,next){
+	res.sendFile(path.join(__dirname, '../public/views/index.html'));
+});
 ```
 
 Let's head over to our index.html in our server/public/views/ folder(s). Here, let's actually bring in Angular and our Client Side app code (currently empty) into build, so that when the files are sent back to the client, it knows that it needs Angular and our App and where to get it. So let's add:
 
 ```
 <script src="/vendor/angular/angular.min.js" type="text/javascript"></script>
-<script src="/assets/scripts/app.min.js" type="text/javascript"></script>
+<script src="/assets/scripts/client.min.js" type="text/javascript"></script>
 ```
 
-The first line brings in Angular, and the second brings in our Client Side app code. Let's go ahead and give this a build so we know things are working OK. If everything is working OK, we can check our 'sources' tab in our inspector in Chrome and see both Angular and our App min files loading up. Once you confirm that things look good, let's go ahead and shut down the server.
+The first line brings in Angular, and the second brings in our Client Side app code. Let's go ahead and give this a build so we know things are working OK. If everything is working OK, we can check our 'sources' tab in our inspector in Chrome and see both Angular and our client min files loading up. Once you confirm that things look good, let's go ahead and shut down the server.
 
 Head back over to the index.html file and let's change our opening HTML tag to:
 ```
