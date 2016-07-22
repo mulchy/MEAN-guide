@@ -7,7 +7,7 @@ First, we are going to create a new project in Atom.
 Let's give it a name, for this one, we will call it "walking_skeleton".
 
 ### Initialize Node Package Manager (npm)
-Now, let's open Terminal in Atom.
+Now, let's open a terminal in Atom.
 
 In the terminal, type in the command
 
@@ -29,7 +29,6 @@ license | (default) | License is fine at ISC for now.
 https://docs.npmjs.com/files/package.json
 
 Is this ok? Sure is! hit enter.
-Package.json
 
 Now in your project structure, look at the `walking_skeleton` folder and twirl it open. You will notice a `package.json` file that it created. This is information about your project that is important and we will reference it later on.
 
@@ -64,7 +63,7 @@ var server = app.listen(3000, function() {
 
 First we are 'requiring' Express. We installed it previously, so Node and its package manager are aware of Express. So we are then telling the code to go ahead and bring in Express. Once we have done that, we are creating an instance of an Express application called 'app'.
 
-From there, we are getting up a handler for when we receive a `GET` request to the home 'route'. Route is a word we have only started using, but will be one that we start to use quite a bit more going forward. We then call an anonymous function that takes in two arguments, the request object (incoming), and the response object (outgoing). In the function body, we attach "Hello!" to the response and send it back. We will test this out in a moment.
+From there, we are getting up a handler for when we receive a `GET` request to the home 'route'. We then call an anonymous function that takes in two arguments, the request object (incoming), and the response object (outgoing). In the function body, we attach "Hello!" to the response and send it back. We will test this out in a moment.
 
 Now we will setup a server. We will set this equal to the listen method on the app, taking in two arguments. The first is which 'port' we should have our app listen on, the next is the callback function (which is also anonymous) that just lets us know that the server is in fact up. Notice that we are setting the 'port' variable equal to the global server variable's address method, that has a port property. Then we simply give ourselves a little message that lets us know that we are up and rolling.
 
@@ -100,23 +99,23 @@ npm start
 
 This should now have the same functionality as before if you test everything out. Just make sure to close down the server (control + C) to begin developing again.
 
-### Create routes and views
-Back in our project structure (i.e. under our 'walking_skeleton' directory), let's create 'routes' and 'view' folders.
+### Create routes
+Back in our project structure (i.e. under our 'walking_skeleton' directory), let's create a 'routes' folder.
 Create and edit routes/index.js
 Then, in the 'routes' folder, add 'index.js'. Let's cut out the 'app.get' code from our server.js file and move it into the 'index.js' file. Let's do some more work in the 'index.js' file.
 
 Here is how the index.js file should look:
 
-		var express = require('express');
-		var router = express.Router();
-		
-		router.get('/', function(req, res) {
-			console.log('Here is a console log');
-			res.send('Hello!');
-		});
-		
-		module.exports = router;
-		
+	var express = require('express');
+	var router = express.Router();
+	
+	router.get('/', function(req, res) {
+		console.log('Here is a console log');
+		res.send('Hello!');
+	});
+	
+	module.exports = router;
+	
 Once again, we are bringing in Express. Then we are also bringing in 'Router', which is set to a variable from a return of the router method of the express object. Routers will help us manage how incoming requests are handled. More on this later. But now, instead of calling the 'get' method on 'app', we are calling it on the 'router'. So we set up the get method on the router object with a few more intricacies.
 
 As a final command, we export the router object. This makes it available to us throughout the rest of the application. Basically, we have set this up to be how we handle routes for the entire application.
@@ -124,6 +123,7 @@ As a final command, we export the router object. This makes it available to us t
 ### Edit server.js
 We need to make some additional changes in our server.js file now. The first is that we need to require our index information that we just created. So we make a variable called index and set it to our index.js module we created. Then, we are telling the application that when we get a request at the root path ("/") we are going to use that index variable we created. Those changes look like this:
 
+		var express = require('express');
 		var app = express();
 		var index = require('../routes/index');
 		
@@ -132,7 +132,7 @@ We need to make some additional changes in our server.js file now. The first is 
 		var server = app.listen(3000, function() {
 			var port = server.address().port;
 			console.log('Listening on port', port);	
-		}
+		});
 
 
 ### Edit index.js & verify response
@@ -201,7 +201,7 @@ Next, let's add a 'public' folder in the server folder. Inside the public folder
 Lets chat about build automation. Grunt is a technology we use to help us assemble our files. Uglify is another technology that minifies our code down. This becomes important when our applications get big. It takes down the size to something more friendly. So let's get Grunt installed and start hooking it up!
 In the console, let's enter a couple commands:
 ```
-sudo npm install -g grunt-cli
+npm install -g grunt-cli
 ```
 This will allow us to run grunt from the command line! Woot! Our next line is:
 ```
@@ -263,7 +263,7 @@ This is our configuration file for Grunt. It starts with the Grunt.init (which s
 
 Down in the Copy options, you will see 'cwd', which stands for 'Current Working Directory'. Here it copies the information out, then writes it to the needed directory. Specifically for Angular as that is our core to our client side code experience.
 
-Down in the .loadNpmTasks, we register the tasks we need when we run Grunt. That is the short of it. Basically, Grunt is doing a ton of automation for us in terms of copying and moving files. It will also minimize our code in the case with Uglify so it is more web friendly when it gets to the client.
+Down in the .loadNpmTasks, we register the tasks we need when we run Grunt. That is the short of it. Grunt is automatically copying and moving files for us. It will also minify our code with Uglify for faster downloads.
 
 ### Add client directory and supporting files
 Let's make just a couple last additions before we use Grunt. First, in your root directory, add a 'client' folder. In that folder, add an 'client.js' file. Keep it empty for now.
@@ -277,10 +277,10 @@ Now check out those folders! Yahtzee! Files we can use client side! You will see
 Now that we have fancy build processes and Angular, let's go ahead and start hooking up Angular. In our server.js file, add the following line to serve the static content.
 
 ```
-app.use(express.static('server/public')));
+app.use(express.static('server/public'));
 ```
 
-We need to add some logic to serve our index file when a user requests the root URL. Back in the `index.js` file, lets add the following:
+We need to add some logic to serve our index file when a user requests the root URL. Back in the `index.js` file, lets add the path library and replace our previous home route with the route below:
 
 ```
 var path = require('path');
@@ -299,7 +299,7 @@ Let's head over to our index.html in our server/public/views/ folder(s). Here, l
 <script src="/assets/scripts/client.min.js" type="text/javascript"></script>
 ```
 
-The first line brings in Angular, and the second brings in our Client Side app code. Let's go ahead and give this a build so we know things are working OK. If everything is working OK, we can check our 'sources' tab in our inspector in Chrome and see both Angular and our client min files loading up. Once you confirm that things look good, let's go ahead and shut down the server.
+The first line brings in Angular, and the second brings in our client side code. Let's go ahead and give this a build so we know things are working OK. If everything is working OK, we can check our 'sources' tab in our inspector in Chrome and see both Angular and our client min files loading up. Once you confirm that things look good, let's go ahead and shut down the server.
 
 Head back over to the index.html file and let's change our opening HTML tag to:
 ```
@@ -405,8 +405,8 @@ These are the calls that handle GET and POST, specifically when we hit the /cats
 
 In the get call, we return the results of querying the database for everything. In the response, we send down a JSON version of the cats database.
 
-If we start Mongo, the Server, and the application now, everything should be all hooked up! (Don't forget to run grunt before starting the app.) Type in a name of a cat, it will go back to the server, then the database, then come all the way back and be rendered to the page.
+If we start Mongo, the Server, and the application now, everything should be all hooked up! (**Don't forget to run grunt before starting the app.**) Type in a name of a cat, it will go back to the server, then the database, then come all the way back and be rendered to the page.
 
-And that is the short of it! OBVIOUSLY we will deep dive this topic by topic for the next couple weeks, but at this point, you should have a working MEAN application. If you can, I would recommend going through this guide a couple times over the next couple weeks to work toward an understanding of everything that is happening conceptually.
+At this point, you should have a working MEAN application. If you can, I would recommend going through this guide a couple times over the next couple weeks to work toward an understanding of everything that is happening conceptually.
 
 This is tough content, and if you made it here, pat yourself on the back (seriously). Help those around you who might be struggling with this content, it will help you understand it much better.
