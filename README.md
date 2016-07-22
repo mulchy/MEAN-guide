@@ -1,26 +1,6 @@
 ![MEAN Diagram](images/mean-diagram-3.png)
 ### Let's spin up a new project!
 
-Before we get rolling, let's make sure that we have Node and MongoDB installed.
-Let's enter in these commands in a Terminal window:
-
-```
-brew install node
-brew install mongo
-mkdir -p /data/db
-```
-
-If the above line does not work, we will perform the action as a super user:
-
-```
-sudo mkdir -p 	/data/db
-sudo chmod 0755 /data/db
-sudo chown $USER /data/db
-```
-
-It will prompt you for a password. Type in your computer password.
-NOTE: It will not show what you type, this is expected behavior, trust me when I say you are in fact typing.
-
 ### Create a new Atom Project
 First, we are going to create a new project in Atom.
 
@@ -126,33 +106,34 @@ Create and edit routes/index.js
 Then, in the 'routes' folder, add 'index.js'. Let's cut out the 'app.get' code from our server.js file and move it into the 'index.js' file. Let's do some more work in the 'index.js' file.
 
 Here is how the index.js file should look:
-```
-var express = require('express');
-var router = express.Router();
 
-router.get('/', function(req, res) {
-	console.log('Here is a console log');
-	res.send('Hello!');
-});
-
-module.exports = router;
-```
+		var express = require('express');
+		var router = express.Router();
+		
+		router.get('/', function(req, res) {
+			console.log('Here is a console log');
+			res.send('Hello!');
+		});
+		
+		module.exports = router;
+		
 Once again, we are bringing in Express. Then we are also bringing in 'Router', which is set to a variable from a return of the router method of the express object. Routers will help us manage how incoming requests are handled. More on this later. But now, instead of calling the 'get' method on 'app', we are calling it on the 'router'. So we set up the get method on the router object with a few more intricacies.
 
 As a final command, we export the router object. This makes it available to us throughout the rest of the application. Basically, we have set this up to be how we handle routes for the entire application.
 
 ### Edit server.js
 We need to make some additional changes in our server.js file now. The first is that we need to require our index information that we just created. So we make a variable called index and set it to our index.js module we created. Then, we are telling the application that when we get a request at the root path ("/") we are going to use that index variable we created. Those changes look like this:
-```
-...
-var app = express();
-var index = require('../routes/index');
 
-app.use('/', index);
+		var app = express();
+		var index = require('../routes/index');
+		
+		app.use('/', index);
+		
+		var server = app.listen(3000, function() {
+			var port = server.address().port;
+			console.log('Listening on port', port);	
+		}
 
-var server = app.listen(3000, function() {
-...
-```
 
 ### Edit index.js & verify response
 Let's run another test of our code to make sure everything is working. Change "Hello!" in our index.js to be "Hello World!" This will just make sure that the response we are getting is unique to the changes we just made, and that everything is in fact, working great.
@@ -164,15 +145,15 @@ Now let's work on getting Mongo all set up. Mongo is our database for this exerc
 
 ### Start Mongo
 If you haven't set mongod up to run automatically, you will need to start it each time you want to access your database. To do this, from a terminal, run the command:
-```
-mongod
-```
+
+	mongod
+
 This will turn on mongod, which we will use later. To stop mongo, press "control + c".
 
 Let's install mongoose with this command:
-```
-npm install mongoose --save
-```
+
+	npm install mongoose --save
+	
 Great! With mongoose installed, we can now easily communicate with our Mongo database! Over in our index.js file, let's add a few lines of code after we declare our router variable:
 ```
 var mongoose = require('mongoose');
